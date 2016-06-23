@@ -8,7 +8,7 @@
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [fullcontact/camelsnake "0.9.0"]
                  [fullcontact/full.async "0.9.0"]
-                 [fullcontact/full.core "0.10.0"]
+                 [fullcontact/full.core "0.10.1"]
                  [fullcontact/full.http "0.10.0"]]
   :aot :all
   :release-tasks [["vcs" "assert-committed"]
