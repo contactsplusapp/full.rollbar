@@ -1,4 +1,4 @@
-(defproject fullcontact/full.rollbar "0.10.1"
+(defproject fullcontact/full.rollbar "0.10.2-SNAPSHOT"
   :description "Library to ship exceptions and request information to the rollbar logging service."
   :url "https://github.com/fullcontact/full.rollbar"
   :license {:name "Eclipse Public License - v 1.0"
