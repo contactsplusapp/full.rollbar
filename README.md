@@ -44,7 +44,7 @@ before any other exception handlers.
 `report-exception>` accepts optional arguments for populating `custom` and
 `person` fields of the Rollbar [API request](https://rollbar.com/docs/api/items_post/):
 
-```
+```clojure
 (report-exception>
   handler
   :person-fn (fn [req] {:email (:account-email req)})
