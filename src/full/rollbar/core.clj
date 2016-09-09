@@ -1,16 +1,18 @@
 (ns full.rollbar.core
   (:require [full.http.client :refer [req>]]
-            [full.async :refer [go-try <?? <?]]
-            [full.core.sugar :refer [when->]]
+            [full.async :refer [go-try <?]]
             [camelsnake.core :refer [->snake_case]]
-            [full.core.config :refer [opt]]
-            [full.core.log :as log])
+            [full.core.log :as log]
+            [full.core.config :refer [opt]])
   (:import (java.net InetAddress)))
+
 
 (def rollbar-access-token (opt [:rollbar :access-token] :default nil))
 (def rollbar-environment (opt [:rollbar :environment] :default nil))
 
-(def enabled? (delay (and (some? @rollbar-access-token) (some? @rollbar-environment))))
+(def enabled?
+  (delay (and @rollbar-access-token @rollbar-environment)))
+
 (def host (delay (.getHostAddress (InetAddress/getLocalHost))))
 
 (defn- rollbar-req>
@@ -64,20 +66,21 @@
    :user_ip (:remote-addr req)})
 
 (defn rollbar-payload
-  [host access-token environment]
+  [ex host access-token environment]
   {:access_token access-token
    :data {:environment environment
           :host host
           :language "clojure"
-          :body {}}})
+          :body {:trace (trace-payload ex)}}})
 
 (defn report>
-  [ex & [request]]
+  "Reports an exception to Rollbar."
+  [ex {:keys [request person-fn custom-fn]}]
   (go-try
-    (if @enabled?
-      (-> (rollbar-payload @host @rollbar-access-token @rollbar-environment)
-          (assoc-in [:data :body :trace] (trace-payload ex))
-          (when-> request (assoc-in [:data :body :request] (request-payload request)))
-          (rollbar-req>)
-          (<?)))))
-
+    (when @enabled?
+      (-> (rollbar-payload ex @host @rollbar-access-token @rollbar-environment)
+          (cond->
+            request (assoc-in [:data :body :request] (request-payload request))
+            person-fn (assoc-in [:data :person] (person-fn request))
+            custom-fn (assoc-in [:data :custom] (custom-fn request)))
+          (rollbar-req>) <?))))
