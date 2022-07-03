@@ -1,4 +1,4 @@
-(defproject fullcontact/full.rollbar "0.10.5-SNAPSHOT"
+(defproject fullcontact/full.rollbar "0.10.5"
   :description "Library to ship exceptions and request information to the rollbar logging service."
   :url "https://github.com/fullcontact/full.rollbar"
   :license {:name "Eclipse Public License - v 1.0"
@@ -10,7 +10,7 @@
                  [fullcontact/camelsnake "0.9.0"]
                  [fullcontact/full.async "0.9.0"]
                  [fullcontact/full.core "0.10.1" :exclusions [org.clojure/clojurescript]]
-                 [fullcontact/full.http "1.0.6"]]
+                 [fullcontact/full.http "1.0.8"]]
   :aot :all
   :release-tasks [["vcs" "assert-committed"]
                   ["change" "version" "leiningen.release/bump-version" "release"]
