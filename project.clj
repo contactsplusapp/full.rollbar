@@ -1,10 +1,16 @@
+(defn artifactory [path]
+  {:url (str "https://contactsplus.jfrog.io/artifactory/" path)
+   :sign-releases false})
+
 (defproject fullcontact/full.rollbar "0.10.6-SNAPSHOT"
   :description "Library to ship exceptions and request information to the rollbar logging service."
-  :url "https://github.com/fullcontact/full.rollbar"
+  :url "https://github.com/contactsplusapp/full.rollbar"
   :license {:name "Eclipse Public License - v 1.0"
             :url "http://www.eclipse.org/legal/epl-v10.html"
             :distribution :repo}
-  :deploy-repositories [["releases" {:url "https://clojars.org/repo/" :creds :gpg}]]
+  :repositories [["fullcontact" ~(artifactory "repo")]
+                 ["releases" ~(artifactory "libs-release-local")]
+                 ["snapshots" ~(artifactory "libs-snapshot-local")]]
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [org.clojure/core.async "0.7.559"]
                  [fullcontact/camelsnake "0.9.0"]
